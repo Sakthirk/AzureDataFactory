@@ -1,0 +1,9 @@
+{
+	"name": "sakthiadfpoc",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "a748a7f8-6bbb-429b-8842-de8b19ba3313",
+		"tenantId": "e24ac094-efd8-4a6b-98d5-a129b32a8c9a"
+	}
+}

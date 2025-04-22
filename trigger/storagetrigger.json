@@ -1,0 +1,25 @@
+{
+	"name": "storagetrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "TriggerPipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/destination/blobs/test_dir/",
+			"blobPathEndsWith": ".csv",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/c269ee02-74c8-4f5d-9b64-5b009a5be1a7/resourceGroups/azurefundamentals/providers/Microsoft.Storage/storageAccounts/storagedatafactorysakthi",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
