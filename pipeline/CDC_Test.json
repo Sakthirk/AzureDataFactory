@@ -80,7 +80,7 @@
 					"source": {
 						"type": "SqlServerSource",
 						"sqlReaderQuery": {
-							"value": "activity('LookUpLastLoadedTimestamp').output.firstRowselect * from data_source_table where LastModifytime > '@{activity('LookUpLastLoadedTimestamp').output.firstRow.Watermarkvalue}' and LastModifytime <= '@{activity('LookUpMaxLoadedTime').output.firstRow.Watermarkvalue}'",
+							"value": "select * from data_source_table where LastModifytime > '@{activity('LookUpLastLoadedTimestamp').output.firstRow.Watermarkvalue}' and LastModifytime <= '@{activity('LookUpMaxLoadedTime').output.firstRow.NewWatermarkvalue}'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -119,6 +119,49 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "UpdateWaterMark",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Incremental copy data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_write_watermark]",
+					"storedProcedureParameters": {
+						"LastModifiedtime": {
+							"value": {
+								"value": "@activity('LookUpMaxLoadedTime').output.firstRow.NewWatermarkvalue",
+								"type": "Expression"
+							},
+							"type": "Datetime"
+						},
+						"TableName": {
+							"value": {
+								"value": "@activity('LookUpLastLoadedTimestamp').output.firstRow.TableName",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "LearningDB",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"annotations": []
